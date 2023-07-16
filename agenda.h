@@ -18,3 +18,5 @@ typedef struct _evento {
 void incluirEvento();
 void consultarPorData();
 void consultarPorDataHora();
+void alterarEvento();
+void excluirEvento();

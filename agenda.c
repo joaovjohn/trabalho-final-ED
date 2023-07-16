@@ -139,3 +139,84 @@ void consultarPorDataHora() {
         printf("Nenhum evento encontrado para a data e hora especificadas.\n");
     }
 }
+
+void alterarEvento() {
+    int dia, mes, ano, hora, minuto;
+    printf("Digite a data do evento a ser alterado (formato: dd/mm/aaaa): ");
+    scanf("%d/%d/%d", &dia, &mes, &ano);
+
+    printf("Digite a hora do evento a ser alterado (formato: hh:mm): ");
+    scanf("%d:%d", &hora, &minuto);
+
+    Evento *eventoAtual = agenda;
+    int eventoEncontrado = 0;
+
+    while (eventoAtual != NULL) {
+        if (eventoAtual->dataEvento.dia == dia &&
+            eventoAtual->dataEvento.mes == mes &&
+            eventoAtual->dataEvento.ano == ano &&
+            eventoAtual->dataEvento.hora == hora &&
+            eventoAtual->dataEvento.minuto == minuto) {
+            printf("Digite a nova descrição do evento: ");
+            getchar(); // Limpa o buffer do teclado
+            fgets(eventoAtual->descricao, sizeof(eventoAtual->descricao), stdin);
+            eventoAtual->descricao[strcspn(eventoAtual->descricao, "\n")] = '\0'; // Remove a quebra de linha no final
+
+            printf("Digite a nova duração do evento em horas: ");
+            scanf("%f", &eventoAtual->duracao);
+
+            printf("Evento alterado com sucesso.\n");
+            eventoEncontrado = 1;
+            break;
+        }
+        eventoAtual = eventoAtual->proximo;
+    }
+
+    if (!eventoEncontrado) {
+        printf("Compromisso não encontrado.\n");
+    }
+}
+
+void excluirEvento() {
+    int dia, mes, ano, hora, minuto;
+    printf("Digite a data do evento a ser excluído (formato: dd/mm/aaaa): ");
+    scanf("%d/%d/%d", &dia, &mes, &ano);
+
+    printf("Digite a hora do evento a ser excluído (formato: hh:mm): ");
+    scanf("%d:%d", &hora, &minuto);
+
+    Evento *eventoAtual = agenda;
+    Evento *eventoAnterior = NULL;
+    int eventoEncontrado = 0;
+
+    while (eventoAtual != NULL) {
+        if (eventoAtual->dataEvento.dia == dia &&
+            eventoAtual->dataEvento.mes == mes &&
+            eventoAtual->dataEvento.ano == ano &&
+            eventoAtual->dataEvento.hora == hora &&
+            eventoAtual->dataEvento.minuto == minuto) {
+            if (eventoAnterior == NULL) {
+                agenda = eventoAtual->proximo;
+                if (agenda != NULL) {
+                    agenda->anterior = NULL;
+                }
+            } else {
+                eventoAnterior->proximo = eventoAtual->proximo;
+                if (eventoAtual->proximo != NULL) {
+                    eventoAtual->proximo->anterior = eventoAnterior;
+                }
+            }
+
+            free(eventoAtual);
+            printf("Evento excluído com sucesso.\n");
+            eventoEncontrado = 1;
+            break;
+        }
+        eventoAnterior = eventoAtual;
+        eventoAtual = eventoAtual->proximo;
+    }
+
+    if (!eventoEncontrado) {
+        printf("Compromisso não encontrado.\n");
+    }
+}

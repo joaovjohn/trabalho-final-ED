@@ -26,13 +26,13 @@ int main() {
             case 3:
                 consultarPorDataHora();
                 break;
-/*            case 4:
+            case 4:
                 alterarEvento();
                 break;
             case 5:
                 excluirEvento();
                 break;
-            case 6:
+/*            case 6:
                 listarEventos();
                 break;
             case 7:
