@@ -20,13 +20,13 @@ int main() {
             case 1:
                 incluirEvento();
                 break;
-/*            case 2:
+            case 2:
                 consultarPorData();
                 break;
             case 3:
                 consultarPorDataHora();
                 break;
-            case 4:
+/*            case 4:
                 alterarEvento();
                 break;
             case 5:

@@ -16,3 +16,5 @@ typedef struct _evento {
 } Evento;
 
 void incluirEvento();
+void consultarPorData();
+void consultarPorDataHora();

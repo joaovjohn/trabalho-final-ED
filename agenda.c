@@ -77,3 +77,65 @@ void incluirEvento() {
 
     printf("Evento agendado com sucesso.\n");
 }
+
+void consultarPorData() {
+    int dia, mes, ano;
+    printf("Digite a data para consulta (formato: dd/mm/aaaa): ");
+    scanf("%d/%d/%d", &dia, &mes, &ano);
+
+    Evento *eventoAtual = agenda;
+    int eventosEncontrados = 0;
+
+    while (eventoAtual != NULL) {
+        if (eventoAtual->dataEvento.dia == dia &&
+            eventoAtual->dataEvento.mes == mes &&
+            eventoAtual->dataEvento.ano == ano) {
+            printf("Código: %d\n", eventoAtual->codigo);
+            printf("Data: %02d/%02d/%04d\n", eventoAtual->dataEvento.dia, eventoAtual->dataEvento.mes, eventoAtual->dataEvento.ano);
+            printf("Hora: %02d:%02d\n", eventoAtual->dataEvento.hora, eventoAtual->dataEvento.minuto);
+            printf("Duração: %.1f\n", eventoAtual->duracao);
+            printf("Descrição: %s\n", eventoAtual->descricao);
+            printf("\n");
+            eventosEncontrados++;
+        }
+        eventoAtual = eventoAtual->proximo;
+    }
+
+    if (eventosEncontrados == 0) {
+        printf("Nenhum evento encontrado para a data especificada.\n");
+    }
+}
+
+void consultarPorDataHora() {
+    int dia, mes, ano, hora, minuto;
+    printf("Digite a data para consulta (formato: dd/mm/aaaa): ");
+    scanf("%d/%d/%d", &dia, &mes, &ano);
+
+    printf("Digite a hora para consulta (formato: hh:mm): ");
+    scanf("%d:%d", &hora, &minuto);
+
+    Evento *eventoAtual = agenda;
+    int eventoEncontrado = 0;
+
+    while (eventoAtual != NULL) {
+        if (eventoAtual->dataEvento.dia == dia &&
+            eventoAtual->dataEvento.mes == mes &&
+            eventoAtual->dataEvento.ano == ano &&
+            eventoAtual->dataEvento.hora == hora &&
+            eventoAtual->dataEvento.minuto == minuto) {
+            printf("Código: %d\n", eventoAtual->codigo);
+            printf("Data: %02d/%02d/%04d\n", eventoAtual->dataEvento.dia, eventoAtual->dataEvento.mes, eventoAtual->dataEvento.ano);
+            printf("Hora: %02d:%02d\n", eventoAtual->dataEvento.hora, eventoAtual->dataEvento.minuto);
+            printf("Duração: %.1f\n", eventoAtual->duracao);
+            printf("Descrição: %s\n", eventoAtual->descricao);
+            printf("\n");
+            eventoEncontrado = 1;
+            break;
+        }
+        eventoAtual = eventoAtual->proximo;
+    }
+
+    if (!eventoEncontrado) {
+        printf("Nenhum evento encontrado para a data e hora especificadas.\n");
+    }
+}
