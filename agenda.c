@@ -12,7 +12,7 @@ int isNumero(char c) {
 void incluirEvento() {
     static int proxCodigo = 1;
 
-    Evento *novoEvento = (Evento *)malloc(sizeof(Evento));
+    Evento *novoEvento = (Evento*)malloc(sizeof(Evento));
     if (novoEvento == NULL) {
         printf("Erro: não foi possível alocar memória para o novo evento.\n");
         return;
@@ -47,9 +47,9 @@ void incluirEvento() {
     scanf("%f", &novoEvento->duracao);
 
     printf("Digite a descrição do evento: ");
-    getchar(); 
+    getchar();
     fgets(novoEvento->descricao, sizeof(novoEvento->descricao), stdin);
-    novoEvento->descricao[strcspn(novoEvento->descricao, "\n")] = '\0'; 
+    novoEvento->descricao[strcspn(novoEvento->descricao, "\n")] = '\0';
 
     novoEvento->proximo = NULL;
     novoEvento->anterior = NULL;
@@ -79,6 +79,7 @@ void incluirEvento() {
 }
 
 void consultarPorData() {
+    ordenarAgendaPorDataHora();
     int dia, mes, ano;
     printf("Digite a data para consulta (formato: dd/mm/aaaa): ");
     scanf("%d/%d/%d", &dia, &mes, &ano);
@@ -107,6 +108,7 @@ void consultarPorData() {
 }
 
 void consultarPorDataHora() {
+    ordenarAgendaPorDataHora();
     int dia, mes, ano, hora, minuto;
     printf("Digite a data para consulta (formato: dd/mm/aaaa): ");
     scanf("%d/%d/%d", &dia, &mes, &ano);
@@ -158,9 +160,9 @@ void alterarEvento() {
             eventoAtual->dataEvento.hora == hora &&
             eventoAtual->dataEvento.minuto == minuto) {
             printf("Digite a nova descrição do evento: ");
-            getchar(); // Limpa o buffer do teclado
+            getchar();
             fgets(eventoAtual->descricao, sizeof(eventoAtual->descricao), stdin);
-            eventoAtual->descricao[strcspn(eventoAtual->descricao, "\n")] = '\0'; // Remove a quebra de linha no final
+            eventoAtual->descricao[strcspn(eventoAtual->descricao, "\n")] = '\0';
 
             printf("Digite a nova duração do evento em horas: ");
             scanf("%f", &eventoAtual->duracao);
@@ -219,4 +221,118 @@ void excluirEvento() {
     if (!eventoEncontrado) {
         printf("Compromisso não encontrado.\n");
     }
+}
+
+void listarEventos() {
+    ordenarAgendaPorDataHora();
+
+    if (agenda == NULL) {
+        printf("Agenda vazia.\n");
+        return;
+    }
+
+    Evento *eventoAtual = agenda;
+
+    while (eventoAtual != NULL) {
+        printf("Código: %d\n", eventoAtual->codigo);
+        printf("Data: %02d/%02d/%04d\n", eventoAtual->dataEvento.dia, eventoAtual->dataEvento.mes, eventoAtual->dataEvento.ano);
+        printf("Hora: %02d:%02d\n", eventoAtual->dataEvento.hora, eventoAtual->dataEvento.minuto);
+        printf("Duração: %.1f\n", eventoAtual->duracao);
+        printf("Descrição: %s\n", eventoAtual->descricao);
+        printf("\n");
+        eventoAtual = eventoAtual->proximo;
+    }
+}
+
+void liberarAgenda() {
+    Evento *eventoAtual = agenda;
+    Evento *eventoProximo;
+
+    while (eventoAtual != NULL) {
+        eventoProximo = eventoAtual->proximo;
+        free(eventoAtual);
+        eventoAtual = eventoProximo;
+    }
+
+    agenda = NULL;
+}
+
+void ordenarAgendaPorDataHora() {
+    if (agenda == NULL || agenda->proximo == NULL) {
+        return;
+    }
+
+    int trocou;
+    Evento *eventoAtual;
+    Evento *eventoAnterior = NULL;
+    Evento *eventoTemp = NULL;
+
+    do {
+        trocou = 0;
+        eventoAtual = agenda;
+
+        while (eventoAtual->proximo != NULL) {
+            if (compareDataHora(eventoAtual->dataEvento, eventoAtual->proximo->dataEvento) > 0) {
+                eventoTemp = eventoAtual->proximo;
+                eventoAtual->proximo = eventoTemp->proximo;
+                eventoTemp->anterior = eventoAtual->anterior;
+
+                if (eventoAtual->anterior != NULL) {
+                    eventoAtual->anterior->proximo = eventoTemp;
+                } else {
+                    agenda = eventoTemp;
+                }
+
+                eventoAtual->anterior = eventoTemp;
+                eventoTemp->proximo = eventoAtual;
+
+                if (eventoAtual->proximo != NULL) {
+                    eventoAtual->proximo->anterior = eventoAtual;
+                }
+
+                eventoAtual = eventoTemp;
+                trocou = 1;
+            }
+
+            eventoAnterior = eventoAtual;
+            eventoAtual = eventoAtual->proximo;
+        }
+    } while (trocou);
+}
+
+int compareDataHora(Data dataHora1, Data dataHora2) {
+    if (dataHora1.ano != dataHora2.ano) {
+        return dataHora1.ano - dataHora2.ano;
+    } else if (dataHora1.mes != dataHora2.mes) {
+        return dataHora1.mes - dataHora2.mes;
+    } else if (dataHora1.dia != dataHora2.dia) {
+        return dataHora1.dia - dataHora2.dia;
+    } else if (dataHora1.hora != dataHora2.hora) {
+        return dataHora1.hora - dataHora2.hora;
+    } else {
+        return dataHora1.minuto - dataHora2.minuto;
+    }
+}
+
+void trocarEventos(Evento *eventoAnterior, Evento *evento1, Evento *evento2) {
+    Evento *eventoTemp = evento2->proximo;
+
+    if (eventoAnterior != NULL) {
+        eventoAnterior->proximo = evento2;
+    } else {
+        agenda = evento2;
+    }
+
+    evento2->proximo = evento1;
+    evento1->proximo = eventoTemp;
+
+    if (eventoTemp != NULL) {
+        eventoTemp->anterior = evento1;
+    }
+
+    evento1->anterior = evento2;
+    if (evento2->proximo != NULL) {
+        evento2->proximo->anterior = evento2;
+    }
+    evento2->anterior = eventoAnterior;
 }

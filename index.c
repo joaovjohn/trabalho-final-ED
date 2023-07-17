@@ -7,14 +7,15 @@ int main() {
 
     while (1) {
         printf("1 - Incluir evento\n");
-/*        printf("2 - Consultar por data\n");
+        printf("2 - Consultar por data\n");
         printf("3 - Consultar por data e hora\n");
         printf("4 - Alterar evento\n");
         printf("5 - Excluir evento\n");
         printf("6 - Listar eventos\n");
-        printf("7 - Sair\n");*/
+        printf("7 - Sair\n");
         printf("Digite uma opção: ");
         scanf("%d", &opcao);
+        printf("\n");
 
         switch (opcao) {
             case 1:
@@ -32,7 +33,7 @@ int main() {
             case 5:
                 excluirEvento();
                 break;
-/*            case 6:
+            case 6:
                 listarEventos();
                 break;
             case 7:
@@ -42,7 +43,6 @@ int main() {
             default:
                 printf("Opção inválida.\n");
                 break;
-                */
         }
 
         printf("\n");
