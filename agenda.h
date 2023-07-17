@@ -11,17 +11,16 @@ typedef struct _evento {
     Data dataEvento;
     float duracao;
     char descricao[100];
-    struct _evento *anterior;
-    struct _evento *proximo;
+    struct _evento* anterior;
+    struct _evento* proximo;
 } Evento;
 
-void incluirEvento();
-void consultarPorData();
-void consultarPorDataHora();
-void alterarEvento();
-void excluirEvento();
-void listarEventos();
+void incluir();
+void consultar();
+void alterar();
+void excluir();
+void listar();
 void liberarAgenda();
 void ordenarAgendaPorDataHora();
-int compareDataHora(Data dataHora1, Data dataHora2);
-void trocarEventos(Evento *eventoAnterior, Evento *evento1, Evento *evento2);
+int compareDataHora(Data, Data);
+void trocarEventos(Evento*, Evento*, Evento*);

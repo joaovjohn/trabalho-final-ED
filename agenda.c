@@ -5,14 +5,21 @@
 
 Evento *agenda = NULL;
 
+/*
+    João Vítor Klein John
+    Trabalho final de ED - O Sistema de Agenda
+    projeto também disponível em https://github.com/joaovjohn/trabalho-final-ED
+    gcc -Wall index.c agenda.c -o agenda
+*/
+
 int isNumero(char c) {
     return c >= '0' && c <= '9';
 }
 
-void incluirEvento() {
+void incluir() {
     static int proxCodigo = 1;
 
-    Evento *novoEvento = (Evento*)malloc(sizeof(Evento));
+    Evento *novoEvento = (Evento *)malloc(sizeof(Evento));
     if (novoEvento == NULL) {
         printf("Erro: não foi possível alocar memória para o novo evento.\n");
         return;
@@ -78,11 +85,24 @@ void incluirEvento() {
     printf("Evento agendado com sucesso.\n");
 }
 
-void consultarPorData() {
+void consultar() {
     ordenarAgendaPorDataHora();
-    int dia, mes, ano;
+    int dia, mes, ano, hora, minuto;
+    char opcao;
     printf("Digite a data para consulta (formato: dd/mm/aaaa): ");
     scanf("%d/%d/%d", &dia, &mes, &ano);
+
+    printf("Deseja especificar uma hora? (S/N): ");
+    getchar();
+    scanf("%c", &opcao);
+
+    if (opcao == 'S' || opcao == 's') {
+        printf("Digite a hora para consulta (formato: hh:mm): ");
+        scanf("%d:%d", &hora, &minuto);
+    } else {
+        hora = -1;
+        minuto = -1;
+    }
 
     Evento *eventoAtual = agenda;
     int eventosEncontrados = 0;
@@ -90,7 +110,9 @@ void consultarPorData() {
     while (eventoAtual != NULL) {
         if (eventoAtual->dataEvento.dia == dia &&
             eventoAtual->dataEvento.mes == mes &&
-            eventoAtual->dataEvento.ano == ano) {
+            eventoAtual->dataEvento.ano == ano &&
+            (hora == -1 || eventoAtual->dataEvento.hora == hora) &&
+            (minuto == -1 || eventoAtual->dataEvento.minuto == minuto)) {
             printf("Código: %d\n", eventoAtual->codigo);
             printf("Data: %02d/%02d/%04d\n", eventoAtual->dataEvento.dia, eventoAtual->dataEvento.mes, eventoAtual->dataEvento.ano);
             printf("Hora: %02d:%02d\n", eventoAtual->dataEvento.hora, eventoAtual->dataEvento.minuto);
@@ -107,42 +129,7 @@ void consultarPorData() {
     }
 }
 
-void consultarPorDataHora() {
-    ordenarAgendaPorDataHora();
-    int dia, mes, ano, hora, minuto;
-    printf("Digite a data para consulta (formato: dd/mm/aaaa): ");
-    scanf("%d/%d/%d", &dia, &mes, &ano);
-
-    printf("Digite a hora para consulta (formato: hh:mm): ");
-    scanf("%d:%d", &hora, &minuto);
-
-    Evento *eventoAtual = agenda;
-    int eventoEncontrado = 0;
-
-    while (eventoAtual != NULL) {
-        if (eventoAtual->dataEvento.dia == dia &&
-            eventoAtual->dataEvento.mes == mes &&
-            eventoAtual->dataEvento.ano == ano &&
-            eventoAtual->dataEvento.hora == hora &&
-            eventoAtual->dataEvento.minuto == minuto) {
-            printf("Código: %d\n", eventoAtual->codigo);
-            printf("Data: %02d/%02d/%04d\n", eventoAtual->dataEvento.dia, eventoAtual->dataEvento.mes, eventoAtual->dataEvento.ano);
-            printf("Hora: %02d:%02d\n", eventoAtual->dataEvento.hora, eventoAtual->dataEvento.minuto);
-            printf("Duração: %.1f\n", eventoAtual->duracao);
-            printf("Descrição: %s\n", eventoAtual->descricao);
-            printf("\n");
-            eventoEncontrado = 1;
-            break;
-        }
-        eventoAtual = eventoAtual->proximo;
-    }
-
-    if (!eventoEncontrado) {
-        printf("Nenhum evento encontrado para a data e hora especificadas.\n");
-    }
-}
-
-void alterarEvento() {
+void alterar() {
     int dia, mes, ano, hora, minuto;
     printf("Digite a data do evento a ser alterado (formato: dd/mm/aaaa): ");
     scanf("%d/%d/%d", &dia, &mes, &ano);
@@ -163,7 +150,6 @@ void alterarEvento() {
             getchar();
             fgets(eventoAtual->descricao, sizeof(eventoAtual->descricao), stdin);
             eventoAtual->descricao[strcspn(eventoAtual->descricao, "\n")] = '\0';
-
             printf("Digite a nova duração do evento em horas: ");
             scanf("%f", &eventoAtual->duracao);
 
@@ -179,7 +165,7 @@ void alterarEvento() {
     }
 }
 
-void excluirEvento() {
+void excluir() {
     int dia, mes, ano, hora, minuto;
     printf("Digite a data do evento a ser excluído (formato: dd/mm/aaaa): ");
     scanf("%d/%d/%d", &dia, &mes, &ano);
@@ -223,7 +209,7 @@ void excluirEvento() {
     }
 }
 
-void listarEventos() {
+void listar() {
     ordenarAgendaPorDataHora();
 
     if (agenda == NULL) {

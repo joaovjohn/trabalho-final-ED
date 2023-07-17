@@ -6,37 +6,33 @@ int main() {
     int opcao;
 
     while (1) {
-        printf("1 - Incluir evento\n");
-        printf("2 - Consultar por data\n");
-        printf("3 - Consultar por data e hora\n");
-        printf("4 - Alterar evento\n");
-        printf("5 - Excluir evento\n");
-        printf("6 - Listar eventos\n");
-        printf("7 - Sair\n");
+        printf("1 - Incluir\n");
+        printf("2 - Consultar\n");
+        printf("3 - Alterar\n");
+        printf("4 - Excluir\n");
+        printf("5 - Listar\n");
+        printf("6 - Sair\n");
         printf("Digite uma opção: ");
         scanf("%d", &opcao);
         printf("\n");
 
         switch (opcao) {
             case 1:
-                incluirEvento();
+                incluir();
                 break;
             case 2:
-                consultarPorData();
+                consultar();
                 break;
             case 3:
-                consultarPorDataHora();
+                alterar();
                 break;
             case 4:
-                alterarEvento();
+                excluir();
                 break;
             case 5:
-                excluirEvento();
+                listar();
                 break;
             case 6:
-                listarEventos();
-                break;
-            case 7:
                 liberarAgenda();
                 printf("Programa encerrado.\n");
                 return 0;
