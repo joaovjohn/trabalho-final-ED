@@ -23,4 +23,3 @@ void listar();
 void liberarAgenda();
 void ordenarAgendaPorDataHora();
 int compareDataHora(Data, Data);
-void trocarEventos(Evento*, Evento*, Evento*);

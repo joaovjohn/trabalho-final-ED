@@ -299,26 +299,3 @@ int compareDataHora(Data dataHora1, Data dataHora2) {
         return dataHora1.minuto - dataHora2.minuto;
     }
 }
-
-void trocarEventos(Evento *eventoAnterior, Evento *evento1, Evento *evento2) {
-    Evento *eventoTemp = evento2->proximo;
-
-    if (eventoAnterior != NULL) {
-        eventoAnterior->proximo = evento2;
-    } else {
-        agenda = evento2;
-    }
-
-    evento2->proximo = evento1;
-    evento1->proximo = eventoTemp;
-
-    if (eventoTemp != NULL) {
-        eventoTemp->anterior = evento1;
-    }
-
-    evento1->anterior = evento2;
-    if (evento2->proximo != NULL) {
-        evento2->proximo->anterior = evento2;
-    }
-    evento2->anterior = eventoAnterior;
-}
